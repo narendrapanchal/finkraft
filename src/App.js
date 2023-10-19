@@ -1,5 +1,4 @@
 // src/App.js
-import React, { useState,useEffect } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
 import Dashboard from './components/Dashboard';
@@ -11,15 +10,16 @@ function App() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('user');
+    window.location="/login";
   };
 
   const handleLogin = (username, password) => {
     const authenticatedUser = authenticateUser(username, password);
 
     if (authenticatedUser) {
-    sessionStorage.setItem('user', JSON.stringify({username:username,role: authenticatedUser.active_module}));
+    sessionStorage.setItem('user', JSON.stringify({username:username,role: authenticatedUser.role}));
     setTimeout(()=>{
-      window.location="/dashboard";
+      window.location="/";
     },2000)
     }
   };
@@ -30,9 +30,9 @@ function App() {
           <li>
             <Link to="/login">Login</Link>
           </li>
-          <li>
-            <Link to="/dashboard">Dashboard</Link>
-          </li>
+          {user?.role!=="Admin"?<li>
+            <Link to="/">Dashboard</Link>
+          </li>:""}
         </ul>
       </nav>
 
@@ -41,7 +41,7 @@ function App() {
 
       <Routes>
       <Route exact path="/login" element={<LoginForm user={user} onLogin={handleLogin}/>} />
-      <Route path='/dashboard' element={<Dashboard onLogout={handleLogout}/>}/>
+      <Route path='/' element={<Dashboard onLogout={handleLogout}/>}/>
   </Routes>
       </AuthProvider>
     </div>

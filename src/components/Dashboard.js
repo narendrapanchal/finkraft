@@ -1,14 +1,12 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-const Dashboard = () => {
+const Dashboard = ({onLogout}) => {
   
   const userData = sessionStorage.getItem('user');
   const user = JSON.parse(userData);
-  let navigate = useNavigate();
   if (user?.role !== 'admin') {
     // If the user is not an admin, redirect to the login page
-    window.location = '/login';
+    console.log("user",user)
+    // window.location = '/login';
     return null; // Prevent rendering the dashboard content
   }else{
     console.log("stay on dashboard")
@@ -17,6 +15,9 @@ const Dashboard = () => {
     <div>
       <h1>Welcome, {user?.role}!</h1>
       {/* Show appropriate components and modules based on user role and active module. */}
+      <button onClick={()=>{
+        onLogout()
+      }}>Logout</button>
     </div>
   );
 };
