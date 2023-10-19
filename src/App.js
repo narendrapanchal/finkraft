@@ -1,24 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
-
+// src/App.js
+import React, { useState,useEffect } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import Dashboard from './components/Dashboard';
+import { authenticateUser } from './services/authService';
+import { AuthProvider } from './context/AuthContext';
 function App() {
+  const userData = sessionStorage.getItem('user');
+  const user = JSON.parse(userData);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('user');
+  };
+
+  const handleLogin = (username, password) => {
+    const authenticatedUser = authenticateUser(username, password);
+
+    if (authenticatedUser) {
+    sessionStorage.setItem('user', JSON.stringify({username:username,role: authenticatedUser.active_module}));
+    setTimeout(()=>{
+      window.location="/dashboard";
+    },2000)
+    }
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+          <li>
+            <Link to="/dashboard">Dashboard</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <hr />
+      <AuthProvider>
+
+      <Routes>
+      <Route exact path="/login" element={<LoginForm user={user} onLogin={handleLogin}/>} />
+      <Route path='/dashboard' element={<Dashboard onLogout={handleLogout}/>}/>
+  </Routes>
+      </AuthProvider>
     </div>
+
   );
 }
 
