@@ -7,7 +7,6 @@ import { AuthProvider } from './context/AuthContext';
 function App() {
   const userData = sessionStorage.getItem('user');
   const user = JSON.parse(userData);
-
   const handleLogout = () => {
     sessionStorage.removeItem('user');
     window.location="/login";
@@ -30,7 +29,7 @@ function App() {
           <li>
             <Link to="/login">Login</Link>
           </li>
-          {user?.role!=="Admin"?<li>
+          {user?.role==="admin"?<li>
             <Link to="/">Dashboard</Link>
           </li>:""}
         </ul>

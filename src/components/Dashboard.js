@@ -6,7 +6,7 @@ const Dashboard = ({onLogout}) => {
   if (user?.role !== 'admin') {
     // If the user is not an admin, redirect to the login page
     console.log("user",user)
-    // window.location = '/login';
+    window.location = '/login';
     return null; // Prevent rendering the dashboard content
   }else{
     console.log("stay on dashboard")
